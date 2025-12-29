@@ -12,8 +12,8 @@
     'author': "Hieu Tran",
     'website': "https://fibotree.com",
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '19.0.0.1',
     'depends': ['web'],
-    'qweb': [],
+    # 'qweb': [],
     'data': [],
 }

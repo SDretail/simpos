@@ -19,6 +19,6 @@ class MainActivity : AppCompatActivity() {
         mainWebView.addJavascriptInterface(SimposJsObject(), "simpos")
         mainWebView.settings.domStorageEnabled = true
 
-        mainWebView.loadUrl("https://chapos.procolla.com")
+        mainWebView.loadUrl("https://odoo.19.dkohome.cl/")
     }
 }

@@ -1,7 +1,5 @@
 <odoo>
     <data>
-
-
         <record id="pos_config_view_form" model="ir.ui.view">
           <field name="name">pos.config.form.view.inherit.simpos_customer_display_baumkuchen</field>
           <field name="model">pos.config</field>

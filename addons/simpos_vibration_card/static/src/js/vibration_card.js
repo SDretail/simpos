@@ -1,12 +1,12 @@
-odoo.define('simpos_vibration_card.vibration_card', function (require) {
-"use strict";
+/** @odoo-module */
 
-var models = require('point_of_sale.models');
-var screens = require('point_of_sale.screens');
-var core = require('web.core');
-var gui = require("point_of_sale.gui");
+import models from 'point_of_sale.models';
+import screens from 'point_of_sale.screens';
+import core from 'web.core';
+import gui from "point_of_sale.gui";
+import PopupWidget from "point_of_sale.popups";
+
 var _t   = core._t;
-var PopupWidget = require("point_of_sale.popups");
 
 var _super_order = models.Order.prototype;
 
@@ -143,8 +143,7 @@ var SelectVibrationCardPopupWidget = PopupWidget.extend({
 
 gui.define_popup({name: "vibration_card_selector", widget: SelectVibrationCardPopupWidget});
 
-return {
+export default {
     OrderlineVibrationCardButton: OrderlineVibrationCardButton,
     OrderlineTableNoButton: OrderlineTableNoButton,
 }
-});

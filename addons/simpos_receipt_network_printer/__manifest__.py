@@ -11,8 +11,13 @@
     'author': "Hieu Tran",
     'website': "http://www.youngtailors.com",
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '19.0.0.1',
     'depends': ['point_of_sale'],
+    'assets': {
+        'point_of_sale.assets': [
+            'simpos_receipt_network_printer/static/src/js/screens.js',
+        ],
+    },
     'data': [
         'views/views.xml'
     ],

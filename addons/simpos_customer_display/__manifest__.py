@@ -13,12 +13,17 @@
     'website': "https://youngtailors.com",
 
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '19.0.0.1',
     'depends': ['point_of_sale'],
-    'qweb': [
-        'static/src/xml/*.xml',
-    ],
+    'assets': {
+        'point_of_sale.assets': [
+            'simpos_customer_display/static/src/js/chrome.js',
+            'simpos_customer_display/static/src/js/models.js',
+            'simpos_customer_display/static/src/js/screens.js',
+            'simpos_customer_display/static/src/xml/*.xml',
+        ],
+    },
     'data': [
-        'views/views.xml'
+        'views/simpos_customer_display_view.xml'
     ],
 }
