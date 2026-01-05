@@ -9,7 +9,7 @@ export interface RestaurantPrinter {
 }
 
 export const restaurantPrinterRepository = {
-  db: db.table<RestaurantPrinter>('restaurant.printer'),
+  db: db.table<RestaurantPrinter>('pos.printer'),
 
   async all(): Promise<RestaurantPrinter[]> {
     return this.db.toArray();

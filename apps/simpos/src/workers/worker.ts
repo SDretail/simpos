@@ -31,20 +31,28 @@ const downloadProductImages = async (productVariants: ProductVariant[]) => {
       productIdsChunks.map(async (productId) => {
         const images = await Promise.all(
           sizes.map(async (size) => {
-            const res = await fetch(
-              `https://odoo13.fibotree.com/web/image?model=product.product&field=image_${size}&id=${productId}`,
-            );
-            if (res.status !== 200) {
+            try {
+              const res = await fetch(
+                `http://localhost/web/image?model=product.product&field=image_${size}&id=${productId}`,
+              );
+              if (res.status !== 200) {
+                return {
+                  size,
+                  blob: undefined,
+                };
+              }
+              const blob = await res.blob();
+              return {
+                size,
+                blob,
+              };
+            } catch (error) {
+              console.error('Error fetching image:', error);
               return {
                 size,
                 blob: undefined,
               };
             }
-            const blob = await res.blob();
-            return {
-              size,
-              blob,
-            };
           }),
         );
         return {
@@ -74,33 +82,41 @@ const downloadProductImages = async (productVariants: ProductVariant[]) => {
   postMessage({ type: 'PRODUCT_IMAGES_SAVED' });
 };
 
-onmessage = async function (e) {
-  switch (e.data.type) {
-    case 'DATA_INITIALIZED': {
-      const productVariants = await productVariantRepository.all();
-      downloadProductImages(productVariants);
-      break;
-    }
-    case 'ACTIVE_ORDER_CHANGED': {
-      orderChannel.postMessage({
-        type: 'ACTIVE_ORDER_CHANGED',
-        payload: e.data.payload,
-      });
-
-      break;
-    }
-    case 'PRODUCT_TEMPLATE_CHANGED': {
-      if (Array.isArray(e.data.payload) && e.data.payload.length > 0) {
-        const templateIds = e.data.payload.map(({ id }: any) => id);
-        const productVariants =
-          await productVariantRepository.findByTemplateIds(templateIds);
-        if (productVariants.length > 0) {
-          downloadProductImages(productVariants);
-        }
+onmessage = function (e) {
+  (async () => {
+    switch (e.data.type) {
+      case 'DATA_INITIALIZED': {
+        const productVariants = await productVariantRepository.all();
+        downloadProductImages(productVariants).catch((err) =>
+          console.error('Failed to download product images', err),
+        );
+        break;
       }
-      break;
+      case 'ACTIVE_ORDER_CHANGED': {
+        orderChannel.postMessage({
+          type: 'ACTIVE_ORDER_CHANGED',
+          payload: e.data.payload,
+        });
+
+        break;
+      }
+      case 'PRODUCT_TEMPLATE_CHANGED': {
+        if (Array.isArray(e.data.payload) && e.data.payload.length > 0) {
+          const templateIds = e.data.payload.map(({ id }: any) => id);
+          const productVariants =
+            await productVariantRepository.findByTemplateIds(templateIds);
+          if (productVariants.length > 0) {
+            downloadProductImages(productVariants).catch((err) =>
+              console.error('Failed to download product images', err),
+            );
+          }
+        }
+        break;
+      }
+      default:
+        break;
     }
-    default:
-      break;
-  }
+  })().catch((err) => {
+    console.error('Worker error:', err);
+  });
 };

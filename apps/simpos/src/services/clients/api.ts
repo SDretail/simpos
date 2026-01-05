@@ -4,15 +4,14 @@ import camelcaseKeys from 'camelcase-keys';
 import { AuthUserMeta } from '../db';
 
 export const simApi = axios.create({
-  baseURL: 'https://odoo.19.dkohome.cl',
+  baseURL: 'http://localhost',
 });
 
 simApi.interceptors.response.use(
   async function (response) {
     if (response.data.error) {
-      throw new Error(
-        get(response, 'data.error.data.message', 'Request error'),
-      );
+      const message = get(response, 'data.error.data.message', 'Request error');
+      throw new Error(`${message} (${response.config.url})`);
     }
 
     return camelcaseKeys(get(response, 'data.result', {}), {

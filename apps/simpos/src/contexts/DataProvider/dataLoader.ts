@@ -33,7 +33,11 @@ const fetchModelData = async (
         fields: fields.length > 0 ? [...fields, 'write_date'] : fields,
         domain,
       })
-      .then(transform);
+      .then(transform)
+      .catch((e) => {
+        console.error(`Error fetching model: ${model}`, e);
+        throw e;
+      });
   };
 
   const revalidate = async () => {
@@ -146,7 +150,7 @@ export const loadModels: LoadModel[] = [
     fields: ['name', 'digits'],
   },
   {
-    model: 'restaurant.printer',
+    model: 'pos.printer',
     fields: [
       'name',
       'proxy_ip',

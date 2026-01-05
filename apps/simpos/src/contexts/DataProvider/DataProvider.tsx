@@ -32,9 +32,9 @@ import {
   productPricelistRepository,
 } from '../../services/db/product-pricelist';
 import {
-  RestaurantPrinter,
-  restaurantPrinterRepository,
-} from '../../services/db/restaurant-printer';
+  PosPrinter,
+  posPrinterRepository,
+} from '../../services/db/pos-printer';
 import { userRepository } from '../../services/db/user';
 import { useAuth } from '../AuthProvider';
 import { syncData } from './dataLoader';
@@ -51,7 +51,7 @@ export interface DataContextState {
   uoms: UOM[];
   paymentMethods: PaymentMethod[];
   cashier?: Employee;
-  printersDict: Record<string, RestaurantPrinter>;
+  printersDict: Record<string, PosPrinter>;
   categoryPrinterIds: Record<string, number[]>;
 }
 
@@ -126,9 +126,11 @@ export const DataProvider: React.FunctionComponent<PropsWithChildren> = ({
     });
 
     const pricelists = await productPricelistRepository.findByIds(
-      posConfig.usePricelist
-        ? posConfig.availablePricelistIds
-        : [posConfig.pricelistId[0]],
+      posConfig.usePricelist && Array.isArray(posConfig.availablePricelistIds)
+        ? posConfig.availablePricelistIds.filter((id) => typeof id === 'number')
+        : [posConfig.pricelistId ? posConfig.pricelistId[0] : null].filter(
+            (id) => typeof id === 'number',
+          ),
     );
     if (pricelists.length === 0) {
       throw new Error('Product pricelist does not setup properly');
@@ -148,15 +150,17 @@ export const DataProvider: React.FunctionComponent<PropsWithChildren> = ({
     const company = await companyRepository.first();
     const uoms = await uomRepository.all();
     const paymentMethods = await paymentMethodRepository.all();
-    const printers = await restaurantPrinterRepository.all();
+    const printers = await posPrinterRepository.all();
 
     const activePrinters = printers.filter(
-      (printer) => ~posConfig.printerIds.indexOf(printer.id),
+      (printer) =>
+        Array.isArray(posConfig.printerIds) &&
+        posConfig.printerIds.includes(printer.id),
     );
     const printersDict = keyBy(activePrinters, 'id');
     const categoryPrinterIdsMap: Record<string, Record<string, boolean>> = {};
     activePrinters.forEach((printer) => {
-      printer.productCategoriesIds.forEach((categoryId) => {
+      printer.product_categories_ids.forEach((categoryId) => {
         if (!categoryPrinterIdsMap[categoryId]) {
           categoryPrinterIdsMap[categoryId] = {};
         }

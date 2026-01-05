@@ -62,10 +62,15 @@ export const SessionBar: React.FunctionComponent<SessionBarProps> = ({
 
   useEffect(() => {
     const getEmployees = async () => {
-      const dataEmployees = await employeeRepository.findByIds(
-        posConfig.employeeIds,
-      );
-      setEmployees(dataEmployees);
+      const validEmployeeIds = Array.isArray(posConfig.employeeIds)
+        ? posConfig.employeeIds.filter((id) => typeof id === 'number')
+        : [];
+      if (validEmployeeIds.length > 0) {
+        const dataEmployees = await employeeRepository.findByIds(
+          validEmployeeIds,
+        );
+        setEmployees(dataEmployees);
+      }
     };
     getEmployees();
   }, [posConfig.modulePosHr, posConfig.employeeIds]);

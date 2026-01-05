@@ -28,8 +28,8 @@ export const KitchenPrintAction: React.FunctionComponent = () => {
   const printId = Object.keys(printersDict)[0];
   const printer = printersDict[printId];
   const printerIp = (() => {
-    if (printer && printer.printerType === 'network_printer') {
-      return printer.networkPrinterIp;
+    if (printer && printer.printer_type === 'network_printer') {
+      return printer.network_printer_ip;
     }
   })();
   const footer = useMemo(() => {
