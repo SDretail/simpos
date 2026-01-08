@@ -37,11 +37,11 @@ export const AuthProvider: React.FunctionComponent<PropsWithChildren> = ({
   const signIn = async (authUserMeta: AuthUserMeta) => {
     await authService.saveAuthMeta(authUserMeta);
     setUserMeta(authUserMeta);
-    window.location.href = '/';
+    window.location.hash = '#/';
   };
   const signOut = async () => {
     await authService.clearLogin();
-    window.location.href = '/login';
+    window.location.hash = '#/login';
   };
 
   const getCurrentAuthMeta = async () => {

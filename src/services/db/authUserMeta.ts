@@ -33,4 +33,7 @@ export const authUserMeta = {
     }
     return this.db.update(meta.id, metadata);
   },
+  async deleteAuth(): Promise<void> {
+    return this.db.clear();
+  },
 };

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import get from 'lodash.get';
 import camelcaseKeys from 'camelcase-keys';
-import { AuthUserMeta } from '../db';
+import { AuthUserMeta, authUserMeta } from '../db';
 
 // Obtener la URL de Odoo desde variables de ambiente
 // Fallback a localhost si no está definida
@@ -14,6 +14,16 @@ export const simApi = axios.create({
 simApi.interceptors.response.use(
   async function (response) {
     if (response.data.error) {
+      // Check for Odoo session expiry (code 100 or specific exception name)
+      if (
+        response.data.error.code === 100 ||
+        response.data.error.message === 'Odoo Session Expired' ||
+        response.data.error.data?.name === 'odoo.http.SessionExpiredException'
+      ) {
+        console.warn('Session expired, clearing token');
+        await authUserMeta.deleteAuth();
+      }
+
       const message = get(response, 'data.error.data.message', 'Request error');
       throw new Error(`${message} (${response.config.url})`);
     }
