@@ -11,6 +11,14 @@ export const simApi = axios.create({
   baseURL: ODOO_URL,
 });
 
+export const setBaseUrl = (url: string) => {
+  simApi.defaults.baseURL = url;
+};
+
+export const getBaseUrl = () => {
+  return simApi.defaults.baseURL;
+};
+
 simApi.interceptors.response.use(
   async function (response) {
     if (response.data.error) {

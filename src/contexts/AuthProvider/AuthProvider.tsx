@@ -36,6 +36,7 @@ export const AuthProvider: React.FunctionComponent<PropsWithChildren> = ({
   const [authChecking, setAuthChecking] = useState(true);
   const signIn = async (authUserMeta: AuthUserMeta) => {
     await authService.saveAuthMeta(authUserMeta);
+    updateSimApiToken(authUserMeta);
     setUserMeta(authUserMeta);
     window.location.hash = '#/';
   };

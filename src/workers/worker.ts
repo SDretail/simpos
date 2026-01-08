@@ -4,6 +4,7 @@ import { ProductVariant, productVariantRepository } from '../services/db';
 import { preferenceRepository } from '../services/db/preference';
 import { SizedImages } from '../types';
 
+const ODOO_URL = import.meta.env.VITE_ODOO_URL || 'http://localhost:8069';
 const sizes = [128]; // 256, 512, 1024
 const perChunk = 10;
 
@@ -33,7 +34,7 @@ const downloadProductImages = async (productVariants: ProductVariant[]) => {
           sizes.map(async (size) => {
             try {
               const res = await fetch(
-                `https://4582fee32cba.ngrok-free.app/web/image?model=product.product&field=image_${size}&id=${productId}`,
+                `${ODOO_URL}/web/image?model=product.product&field=image_${size}&id=${productId}`,
               );
               if (res.status !== 200) {
                 return {

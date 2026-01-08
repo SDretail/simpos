@@ -1,7 +1,7 @@
 {
   "name": "simpos",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0-alpha",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +19,7 @@
     "e2e:open": "start-server-and-test dev http://localhost:5173 cypress",
     "android": "./scripts/android-env.sh tauri android build",
     "android:dev": "./scripts/android-env.sh tauri android dev",
+    "android:deploy": "./scripts/deploy-android.sh",
     "check-env": "node scripts/check-env.js"
   },
   "dependencies": {
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0-rc.18",
+    "@types/lodash.get": "^4.4.9",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",

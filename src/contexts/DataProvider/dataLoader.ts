@@ -110,7 +110,7 @@ export const loadModels: LoadModel[] = [
         this.model,
         this.fields,
         [
-          ['state', '=', 'opened'],
+          ['state', 'in', ['opened', 'opening_control']],
           ['rescue', '=', false],
         ],
         (rows) => {

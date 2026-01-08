@@ -73,6 +73,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.4")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation("com.sunmi:printerlibrary:1.0.18")
 }
 
 apply(from = "tauri.build.gradle.kts")

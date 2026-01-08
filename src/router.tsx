@@ -12,11 +12,13 @@ import PurchaseDetails from './apps/purchase/PurchaseDetails';
 import ProductDetails from './apps/product/ProductDetails';
 import Inventory from './apps/inventory';
 import OrderScreen from './apps/pos/OrderScreen';
+import { RootLayout } from './components/layout/RootLayout';
 
 export const router = createHashRouter([
   {
     path: '/',
     errorElement: <GlobalError />,
+    element: <RootLayout />,
     children: [
       {
         index: true,
@@ -95,6 +97,11 @@ export const router = createHashRouter([
         element: <Debug404 />,
       },
     ],
+  },
+  {
+    future: {
+      v7_startTransition: true,
+    },
   },
 ]);
 

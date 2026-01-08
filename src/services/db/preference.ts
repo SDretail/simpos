@@ -3,6 +3,7 @@ import { db } from './db';
 export interface Preference {
   id?: string;
   lastImagesDownloaded?: Date;
+  odooUrl?: string;
 }
 
 export const preferenceRepository = {

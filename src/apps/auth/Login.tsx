@@ -16,6 +16,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { authService } from '../../services/auth';
 import { useAuth } from '../../contexts/AuthProvider';
+import { usePreference } from '../../contexts/PreferenceProvider';
+import { getBaseUrl } from '../../services/clients/api';
 
 const SignInSchema = Yup.object().shape({
   login: Yup.string().required('Required'),
@@ -26,6 +28,29 @@ export const Login: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const auth = useAuth();
+  const { updateOdooUrl } = usePreference();
+  const [showServerConfig, setShowServerConfig] = React.useState(false);
+  const [serverUrl, setServerUrl] = React.useState(getBaseUrl() || '');
+
+  const handleUpdateServer = async () => {
+    try {
+      await updateOdooUrl(serverUrl);
+      toast({
+        title: 'Server URL updated',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      setShowServerConfig(false);
+    } catch (error) {
+       toast({
+        title: 'Failed to update server URL',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   useEffect(() => {
     if (auth.isLoggedIn) {
@@ -125,6 +150,44 @@ export const Login: React.FunctionComponent = () => {
           )}
         </Formik>
       </Box>
+      <Box
+        position="fixed"
+        bottom="4"
+        right="4"
+        cursor="pointer"
+        onClick={() => setShowServerConfig(!showServerConfig)}
+      >
+        <Heading size="xs" color="gray.500">
+          {getBaseUrl()}
+        </Heading>
+      </Box>
+
+      {showServerConfig && (
+        <Box
+          position="fixed"
+          bottom="12"
+          right="4"
+          bg="white"
+          p={4}
+          rounded="md"
+          shadow="lg"
+          border="1px solid"
+          borderColor="gray.200"
+          zIndex={10}
+        >
+           <FormControl id="server-url" mb={2}>
+              <FormLabel>Odoo Server URL</FormLabel>
+              <Input
+                value={serverUrl}
+                onChange={(e) => setServerUrl(e.target.value)}
+                placeholder="https://odoo.example.com"
+              />
+            </FormControl>
+            <Button size="sm" onClick={handleUpdateServer} colorScheme="blue">
+              Save
+            </Button>
+        </Box>
+      )}
     </Box>
   );
 };
